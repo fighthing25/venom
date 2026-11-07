@@ -1,0 +1,31 @@
+name: Build VenomIsland Binary
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Setup Rust Stable Toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-pc-windows-msvc
+
+      - name: Rust Cache
+        uses: Swatinem/rust-cache@v2
+
+      - name: Compile VenomIsland Executable
+        run: cargo build --release --verbose
+
+      - name: Upload Binary Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: VenomIsland-Windows-x64
+          path: target/release/venom_island.exe
+          if-no-files-found: error
