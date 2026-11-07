@@ -1,6 +1,6 @@
 use std::collections::VecDeque;
 use windows::Win32::NetworkManagement::IpHelper::{
-    FreeMibTable, GetIfTable2, MIB_IF_OPER_STATUS, MIB_IF_TABLE2,
+    FreeMibTable, GetIfTable2, MIB_IF_OPER_STATUS, MIB_IF_OPER_STATUS_UP, MIB_IF_TABLE2,
 };
 
 pub struct PrayerSchedule {
@@ -62,7 +62,7 @@ impl TrafficMonitor {
 
                 for row in rows {
                     if row.InterfaceAndOperStatusFlags.HardwareInterface.as_bool()
-                        && row.OperStatus == MIB_IF_OPER_STATUS::MIB_IF_OPER_STATUS_UP
+                        && row.OperStatus == MIB_IF_OPER_STATUS_UP
                     {
                         total_in += row.InOctets;
                         total_out += row.OutOctets;
