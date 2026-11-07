@@ -1,5 +1,7 @@
 use std::collections::VecDeque;
-use windows::Win32::NetworkManagement::IpHelper::{GetIfTable2, FreeMibTable, MIB_IF_TABLE2};
+use windows::Win32::NetworkManagement::IpHelper::{
+    FreeMibTable, GetIfTable2, MIB_IF_OPER_STATUS, MIB_IF_TABLE2,
+};
 
 pub struct PrayerSchedule {
     pub imsak: &'static str,
@@ -59,7 +61,9 @@ impl TrafficMonitor {
                 let mut total_out = 0u64;
 
                 for row in rows {
-                    if row.InterfaceAndOperStatusFlags.HardwareInterface() && row.OperStatus.0 == 1 {
+                    if row.InterfaceAndOperStatusFlags.HardwareInterface.as_bool()
+                        && row.OperStatus == MIB_IF_OPER_STATUS::MIB_IF_OPER_STATUS_UP
+                    {
                         total_in += row.InOctets;
                         total_out += row.OutOctets;
                     }
